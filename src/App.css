@@ -1,0 +1,408 @@
+/* Reset global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container principal */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ========== MENU ========== */
+.menu-card {
+  background-color: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.menu-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.menu-button {
+  padding: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.menu-button.pvp {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.menu-button.pve {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.menu-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.menu-button:active {
+  transform: scale(0.98);
+}
+
+/* Sélecteur de difficulté */
+.difficulty-selector {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.difficulty-selector label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.difficulty-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.difficulty-select:hover {
+  border-color: #667eea;
+}
+
+.difficulty-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+/* ========== JEU ========== */
+.game-card {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Header du jeu */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.back-button {
+  padding: 8px 16px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.back-button:hover {
+  background-color: #d0d0d0;
+}
+
+.back-button:active {
+  transform: scale(0.95);
+}
+
+/* Titre */
+.game-title {
+  text-align: center;
+  color: #333;
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+/* Indicateur de mode */
+.mode-indicator {
+  text-align: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Status des joueurs */
+.status-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+}
+
+.player-info {
+  text-align: center;
+}
+
+.player-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.player-score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Messages */
+.message {
+  padding: 10px;
+  margin-bottom: 15px;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.warning {
+  background-color: #fbbf24;
+}
+
+.message.success {
+  background-color: #4ade80;
+}
+
+.message.info {
+  background-color: #3b82f6;
+}
+
+/* ========== PLATEAU ========== */
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, 60px);
+  gap: 2px;
+  background-color: #2d3748;
+  padding: 2px;
+  border-radius: 8px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.board-row {
+  display: contents;
+}
+
+/* Cellules */
+.cell {
+  width: 60px;
+  height: 60px;
+  background-color: #48bb78;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.cell:hover {
+  background-color: #38a169;
+}
+
+.cell.valid-move {
+  background-color: #68d391;
+}
+
+.cell.disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Pièces */
+.piece {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: placePiece 0.3s ease;
+}
+
+@keyframes placePiece {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.piece.black {
+  background: radial-gradient(circle at 30% 30%, #4a5568, #1a202c);
+}
+
+.piece.white {
+  background: radial-gradient(circle at 30% 30%, #ffffff, #e2e8f0);
+}
+
+/* Indicateur de coup valide */
+.hint {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Bouton reset */
+.reset-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover {
+  background-color: #5568d3;
+  transform: scale(1.02);
+}
+
+.reset-button:active {
+  transform: scale(0.98);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+  .board {
+    grid-template-columns: repeat(8, 45px);
+  }
+  
+  .cell {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .piece {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .game-title {
+    font-size: 2rem;
+  }
+  
+  .menu-card, .game-card {
+    padding: 20px;
+  }
+  
+  .menu-button {
+    padding: 15px;
+    font-size: 1.1rem;
+  }
+}
+.options-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  text-align: center;
+  z-index: 10;
+}
+
+.option-group {
+  margin: 15px 0;
+}
+
+.options-card select {
+  padding: 5px;
+  margin-left: 10px;
+  border-radius: 5px;
+}
+
+.start-button, .options-button {
+  background: #0f62fe;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.start-button:hover, .options-button:hover {
+  background: #0353e9;
+}

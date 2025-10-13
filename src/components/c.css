@@ -1,0 +1,57 @@
+.options-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.options-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 320px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.option-group {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.option-group h4 {
+  margin-bottom: 0.5rem;
+}
+
+.option-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  background-color: #2047b3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #182f7a;
+}
+
+button.cancel {
+  background-color: #aaa;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
