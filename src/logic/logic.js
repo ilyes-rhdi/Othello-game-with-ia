@@ -28,7 +28,6 @@ function peutCapturer(board, x, y, couleurJoueur) {
     let j = y + dy;
     let aVuEnnemi = false;
     let pionaretourner = [];
-    // Tant qu'on reste dans le plateau
     while (i >= 0 && i < 8 && j >= 0 && j < 8) {
       const pion = board[i][j];
 
@@ -50,22 +49,19 @@ function peutCapturer(board, x, y, couleurJoueur) {
   return [tousLesPionsARetourner.length > 0, tousLesPionsARetourner];
 }
 
-// 2. Vérifie si un coup est valide
 export function isValidMove(board, row, col, player) {
   if (board[row][col] !== null) return false; // case déjà occupée
   let [i,_] = peutCapturer(board, row, col, player);
   return i;
 }
 
-// 3. Trouve les directions de capture pour un coup
 function getFlippableDiscs(board, row, col, player) {
 
   let [_,j] = peutCapturer(board, row, col, player);
   return j;
-  // retourne une liste des pions à retourner
+
 }
 
-// 4. Joue un coup : place le pion et retourne les adverses capturés
 export function makeMove(board, row, col, player) {
   const newBoard = board.map(r => r.slice());
   newBoard[row][col] = player;
@@ -76,7 +72,7 @@ export function makeMove(board, row, col, player) {
   return newBoard;
 }
 
-// 5. Vérifie si un joueur peut encore jouer
+
 export function hasValidMove(board, player)
 {
   for (let r = 0; r < BOARD_SIZE; r++) {
@@ -89,7 +85,6 @@ export function hasValidMove(board, player)
   return false;
 }
 
-// 6. Calcule le score actuel (nombre de pions noirs/blancs)
 export function getScore(board) {
   let blackCount = 0;
   let whiteCount = 0; 
@@ -100,10 +95,9 @@ export function getScore(board) {
     }
   }
   return { black: blackCount, white: whiteCount };
-  // compte les pions de chaque couleur
+
 }
 
-// 7. Vérifie si la partie est terminée
 export function isGameOver(board) {
   return !hasValidMove(board, 'B') && !hasValidMove(board, 'W');
   // aucun des deux joueurs ne peut jouer

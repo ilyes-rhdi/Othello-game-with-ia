@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
 import Board from './components/Board';
-import { isValidMove, makeMove, hasValidMove, initializeBoard, IA, ChooseBestMove } from './logic/logic';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { isValidMove, makeMove, hasValidMove, initializeBoard } from './logic/logic';
 import './App.css';
 
 function App() {
@@ -13,53 +13,82 @@ function App() {
   const [message, setMessage] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [showOptions, setShowOptions] = useState(true);
+  const workerRef = useRef(null);
+  const boardRef = useRef(board);
+  const gameOverRef = useRef(gameOver);
+  const isThinkingRef = useRef(isThinking);
 
-  const playAIMove = useCallback(() => {
-    setIsThinking(true);
-    setMessage('🤔 IA réfléchit...');
+  useEffect(() => { boardRef.current = board; }, [board]);
+  useEffect(() => { gameOverRef.current = gameOver; }, [gameOver]);
+  useEffect(() => { isThinkingRef.current = isThinking; }, [isThinking]);
+  useEffect(() => {
+  // Vite/CRA/Next (app router) : new URL(..., import.meta.url)
+  workerRef.current = new Worker(new URL('./aiWorker.js', import.meta.url), { type: 'module' });
 
-    setTimeout(() => {
-      const tree = IA(difficulty, board, 'W');
+  workerRef.current.onmessage = (e) => {
+    const { type, bestMove, error } = e.data || {};
 
-      if (!tree || tree.length === 0) {
+    if (type === 'BEST_MOVE') {
+      if (gameOverRef.current) return;
+      if (!bestMove) {
         setMessage("L'IA ne peut pas jouer !");
         setCurrentPlayer('B');
         setIsThinking(false);
         return;
       }
+      const baseBoard = boardRef.current;
+      const newBoard = makeMove(baseBoard, bestMove[0], bestMove[1], 'W');
+      setBoard(newBoard);
 
-      const bestMove = ChooseBestMove(tree, 'W');
+      const blackCount = newBoard.flat().filter(c => c === 'B').length;
+      const whiteCount = newBoard.flat().filter(c => c === 'W').length;
+      setScores({ B: blackCount, W: whiteCount });
 
-      if (bestMove) {
-        // ✅ Applique le coup et met à jour le state
-        const newBoard = makeMove(board, bestMove[0], bestMove[1], 'W');
-        setBoard(newBoard);
-
-        // ✅ Recalcule les scores
-        const blackCount = newBoard.flat().filter(cell => cell === 'B').length;
-        const whiteCount = newBoard.flat().filter(cell => cell === 'W').length;
-        setScores({ B: blackCount, W: whiteCount });
-
-        // ✅ Vérifie la fin de partie
-        const nextPlayer = 'B';
-        if (!hasValidMove(newBoard, nextPlayer)) {
-          if (!hasValidMove(newBoard, 'W')) {
-            setGameOver(true);
-            const winner = blackCount > whiteCount ? '⚫ Noir' : whiteCount > blackCount ? '⚪ Blanc' : 'Égalité';
-            setMessage(winner === 'Égalité' ? "🤝 Égalité parfaite !" : `${winner} a gagné 🎉`);
-          } else {
-            setMessage("⚫ Noir ne peut pas jouer.");
-            setTimeout(() => setMessage(''), 3000);
-          }
+      const nextPlayer = 'B';
+      if (!hasValidMove(newBoard, nextPlayer)) {
+        if (!hasValidMove(newBoard, 'W')) {
+          setGameOver(true);
+          const winner = blackCount > whiteCount ? '⚫ Noir' : whiteCount > blackCount ? '⚪ Blanc' : 'Égalité';
+          setMessage(winner === 'Égalité' ? "🤝 Égalité parfaite !" : `${winner} a gagné 🎉`);
         } else {
-          setCurrentPlayer(nextPlayer);
-          setMessage('');
+          setMessage("⚫ Noir ne peut pas jouer.");
+          setTimeout(() => setMessage(''), 3000);
         }
+      } else {
+        setCurrentPlayer(nextPlayer);
+        setMessage('');
       }
 
       setIsThinking(false);
-    }, 1000);
-  }, [board, difficulty]);
+    }
+
+    if (type === 'ERROR') {
+      setMessage(error || 'Erreur IA');
+      setIsThinking(false);
+    }
+  };
+
+  return () => {
+    workerRef.current?.terminate();
+    workerRef.current = null;
+  };
+}, []);
+const playAIMove = useCallback(() => {
+  if (!workerRef.current) return;
+  setIsThinking(true);
+  setMessage('🤔 IA réfléchit...');
+  workerRef.current.postMessage({ type: 'ABORT' });
+  // Petit délai visuel (optionnel)
+  setTimeout(() => {
+    workerRef.current.postMessage({
+      type: 'START',
+      board,
+      difficulty,
+      color: 'W',
+    });
+  }, 150);
+}, [board, difficulty]);
+
 
   useEffect(() => {
     if (gameMode === 'pve' && currentPlayer === 'W' && !gameOver && !isThinking) {
@@ -104,6 +133,7 @@ function App() {
   };
 
   const resetGame = () => {
+    workerRef.current?.postMessage({ type: 'ABORT' });
     setBoard(initializeBoard());
     setCurrentPlayer('B');
     setScores({ B: 2, W: 2 });
