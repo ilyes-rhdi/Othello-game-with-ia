@@ -19,10 +19,11 @@ You can still experiment to understand how it works.
    git clone https://github.com/ilyes-rhdi/Othello-game-with-ia.git
    
 2. **Install dependencies**
-  ```bash
+   ```bash
    npm i 
-
+   
 3. **Run the development server**
-    ```bash
+   ```bash
    npm run dev
+
   
