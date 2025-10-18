@@ -16,7 +16,13 @@ You can still experiment to understand how it works.
 
 1. **Clone the repository**
    ```bash
-   git clone <repo_link>
+   git clone https://github.com/ilyes-rhdi/Othello-game-with-ia.git
+   
+2. **Install dependencies**
+  ```bash
    npm i 
+
+3. **Run the development server**
+    ```bash
    npm run dev
-```
+  
